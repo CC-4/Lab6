@@ -31,7 +31,19 @@ public final class Graph {
    * @return true if the class has cycles, false if not
    */
   public boolean hasCycles(String name) {
-    return hasCycles(name, new HashSet<>());
+    // first verify the given class
+    boolean isCyclic = hasCycles(name, new HashSet<>());
+    if (!isCyclic) {
+      // then verify ancestors
+      for (String cls : graph.keySet()) {
+        if (!cls.equals(name) && graph.get(cls).contains(name)) {
+          if (hasCycles(cls, new HashSet<>())) {
+            return true;
+          }
+        }
+      }
+    }
+    return isCyclic;
   }
 
   /**
