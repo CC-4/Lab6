@@ -30,10 +30,9 @@ def create(name, data):
 
 
 # executes a test
-def execute(name, part):
-    test = os.path.join('grading', name + '.vp')
-    testout = os.path.join('grading', '.tmp.s')
-    os.system('./run -' + part + ' ' + test + ' >> grading/.tmp 2>&1')
+def execute(name, part, ext):
+    test = os.path.join('grading', name + ext)
+    os.system('./run -' + part + ' ' + test + ' > grading/.tmp 2>&1')
     testout = open('grading/.tmp', 'r')
     testresult = testout.read().strip()
     testout.close()
@@ -41,15 +40,15 @@ def execute(name, part):
 
 
 # copy result
-def copy(name, data):
-    f = open('grading/test-output/' + name + '.vp.out', 'w')
+def copy(name, data, ext):
+    f = open('grading/test-output/' + name + ext + '.out', 'w')
     f.write(data)
     f.close()
 
 
 # calls diff
-def diff(name):
-    cmd = 'diff grading/%s.vp.out grading/test-output/%s.vp.out' % (name, name)
+def diff(name, ext):
+    cmd = 'diff grading/%s%s.out grading/test-output/%s%s.out' % (name, ext, name, ext)
     cmd += ' > grading/test-output/%s.diff' % name
     os.system(cmd)
 
@@ -72,20 +71,21 @@ def main(part):
     print('')
     os.system('./gradlew clean build > /dev/null 2>&1')
     grade = 0
-    total = 12 if part == 'viper' else 5
+    total = 12 if part == 'viper' else 6
+    ext = '.vp' if part == 'viper' else '.g'
     for sample in data[part]:
         # unpack test data
         input, output, name = sample
         # create test input
-        create(name + '.vp', input)
+        create(name + ext, input)
         # create test expected result
-        create(name + '.vp.out', output)
+        create(name + ext + '.out', output)
         # run test
-        uresult = execute(name, part)
+        uresult = execute(name, part, ext)
         # compare
         if uresult != output:
-            copy(name, uresult)
-            diff(name)
+            copy(name, uresult, ext)
+            diff(name, ext)
             info = colored('-%d' % 1, 'red')
             info += colored('(%s)' % name, 'cyan').center(30, ' ')
             print(info)
