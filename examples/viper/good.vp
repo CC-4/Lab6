@@ -1,5 +1,5 @@
 def sqr(n: int) : int {
-  return n * n;
+  return 2 * 2;
 }
 
 def main() : int {
