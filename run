@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ ! -d "build" ]; then
+  ./gradlew build > /dev/null 2>&1
+fi
+
+java -jar build/libs/lab7-1.0.jar $@

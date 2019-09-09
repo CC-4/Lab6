@@ -1,0 +1,8 @@
+def sqr(n: int) : int {
+  return n * n;
+}
+
+def main() : int {
+  sqr(2 + 2);
+  return 0;
+}

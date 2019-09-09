@@ -1,0 +1,4 @@
+def main(): int {
+  true;
+  return 0;
+}

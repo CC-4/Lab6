@@ -1,0 +1,7 @@
+def foo(): int {
+
+}
+
+def main(): int {
+  return 0;
+}
