@@ -102,23 +102,29 @@ public final class Main {
             try {
               Graph graph = new Graph();
               BufferedReader br = new BufferedReader(new FileReader(file));
-              LinkedList<String> parents = new LinkedList<>();
+              LinkedList<String> classes = new LinkedList<>();
               String fmt = "class %s, or an ancestor of %s, is involved in an inheritance cycle";
               do {
                 String line = br.readLine();
                 if (line == null) break;
                 String[] data = line.split("->");
                 String parent = data[0].trim();
+                if (!classes.contains(parent)) {
+                  classes.add(parent);
+                }
                 LinkedList<String> children = new LinkedList<>();
                 for (String child : data[1].split(",")) {
-                  children.add(child.trim());
+                  child = child.trim();
+                  children.add(child);
+                  if (!classes.contains(child)) {
+                    classes.add(child);
+                  }
                 }
-                parents.add(parent);
                 graph.add(parent, children);
               } while (true);
-              for (String parent : parents) {
-                if (graph.hasCycles(parent)) {
-                  System.out.println(String.format(fmt, parent, parent));
+              for (String cls : classes) {
+                if (graph.hasCycles(cls)) {
+                  System.out.println(String.format(fmt, cls, cls));
                 }
               }
             } catch (IOException e) {
