@@ -49,7 +49,6 @@ public final class Main {
     System.out.println();
     System.out.println("Options:");
     System.out.println("  -h, --help    show this help message and exit");
-    System.out.println("  -c, --cycles  runs cycles part");
     System.out.println("  -v, --viper   runs viper part");
     System.exit(0);
   }
@@ -72,7 +71,6 @@ public final class Main {
       System.out.println();
       System.out.println("Options:");
       System.out.println("  -h, --help    show this help message and exit");
-      System.out.println("  -c, --cycles  runs cycles part");
       System.out.println("  -v, --viper   runs viper part");
     }
     System.exit(0);
@@ -86,7 +84,6 @@ public final class Main {
   public static void main(String[] args) {
     Options options = new Options();
     options.addOption(Option.builder("h").longOpt("help").build());
-    options.addOption(Option.builder("c").longOpt("cycles").build());
     options.addOption(Option.builder("v").longOpt("viper").build());
     try {
       DefaultParser parser = new DefaultParser();
@@ -98,39 +95,7 @@ public final class Main {
       if (files.length != 0) {
         File file = new File(files[0]);
         if (file.exists()) {
-          if (cmd.hasOption("cycles")) {
-            try {
-              Graph graph = new Graph();
-              BufferedReader br = new BufferedReader(new FileReader(file));
-              LinkedList<String> classes = new LinkedList<>();
-              String fmt = "class %s, or an ancestor of %s, is involved in an inheritance cycle";
-              do {
-                String line = br.readLine();
-                if (line == null) break;
-                String[] data = line.split("->");
-                String parent = data[0].trim();
-                if (!classes.contains(parent)) {
-                  classes.add(parent);
-                }
-                LinkedList<String> children = new LinkedList<>();
-                for (String child : data[1].split(",")) {
-                  child = child.trim();
-                  children.add(child);
-                  if (!classes.contains(child)) {
-                    classes.add(child);
-                  }
-                }
-                graph.add(parent, children);
-              } while (true);
-              for (String cls : classes) {
-                if (graph.hasCycles(cls)) {
-                  System.out.println(String.format(fmt, cls, cls));
-                }
-              }
-            } catch (IOException e) {
-              error("I/O errors", false);
-            }
-          } else if (cmd.hasOption("viper")) {
+          if (cmd.hasOption("viper")) {
             Program program = Parser.parse(file);
             program.semant();
             program.dump(System.out);
