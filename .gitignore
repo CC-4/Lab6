@@ -36,6 +36,7 @@ hs_err_pid*
 !java-cup-11b.jar
 !jflex-full-1.7.0.jar
 !gradle/wrapper/gradle-wrapper.jar
+!Viper-1.1-ref.jar
 
 # gradle
 .gradle
